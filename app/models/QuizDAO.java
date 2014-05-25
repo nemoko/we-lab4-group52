@@ -56,8 +56,7 @@ public class QuizDAO implements IQuizDAO {
      */
     @Override
     public void persist(BaseEntity entity) {
-        // TODO: Implement Method
-        throw new UnsupportedOperationException("Not yet implemented.");
+        em().persist(entity);
     }
 
 
@@ -70,8 +69,7 @@ public class QuizDAO implements IQuizDAO {
      */
     @Override
     public <T extends BaseEntity> T merge(T entity) {
-        // TODO: Implement Method
-        throw new UnsupportedOperationException("Not yet implemented.");
+        return em().merge(entity);
     }
 
     /**
@@ -83,8 +81,7 @@ public class QuizDAO implements IQuizDAO {
      */
     @Override
     public <T extends BaseEntity> T findEntity(Long id, Class<T> entityClazz) {
-        // TODO: Implement Method
-        throw new UnsupportedOperationException("Not yet implemented.");
+        return em().find(entityClazz, id);
     }
 
 
@@ -97,8 +94,11 @@ public class QuizDAO implements IQuizDAO {
      */
     @Override
     public <E extends BaseEntity> List<E> findEntities(Class<E> entityClazz) {
-        // TODO: Implement Method
-        throw new UnsupportedOperationException("Not yet implemented.");
+        String q = "SELECT c FROM " + entityClazz.getSimpleName() + " c";
+
+        TypedQuery<E> query = em().createQuery(q,entityClazz);
+
+        return query.getResultList();
     }
 
 
