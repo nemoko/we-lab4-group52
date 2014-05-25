@@ -19,12 +19,6 @@ public class QuizUser extends BaseEntity {
 		male, female
 	}
 
-    //@TODO - as soon as the id attribute has been introduced to the base entity - remove the ID
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-
 	@Constraints.Required
 	@Constraints.MinLength(4)
 	@Constraints.MaxLength(8)
@@ -115,12 +109,4 @@ public class QuizUser extends BaseEntity {
 	public boolean authenticate(String password) {
 		return this.getPassword().equals(password);
 	}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

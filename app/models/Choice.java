@@ -1,8 +1,14 @@
 package models;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+
 /**
  * Represents a choice which is stored in the DB
  */
+@Entity
 public class Choice extends BaseEntity {
 
 
@@ -13,6 +19,7 @@ public class Choice extends BaseEntity {
     private Boolean correctAnswer;
 
     //The question this choice belongs to
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Question question;
 
     /**
