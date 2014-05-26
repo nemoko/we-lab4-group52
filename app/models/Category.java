@@ -19,7 +19,7 @@ public class Category extends BaseEntity {
 
 
     //A list of questions in this category
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) //mappedBy = "CategoryContains"
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private List<Question> questions = new ArrayList<Question>();
 
     /**

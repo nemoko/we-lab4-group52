@@ -17,12 +17,12 @@ public class Question extends BaseEntity {
     private BigDecimal maxtime;
 
     //The category to which this question belongs to
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     private Category category;
 
 
     //A list of choices belonging to this question
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "question")
     private List<Choice> choices = new ArrayList<Choice>();
 
 

@@ -19,7 +19,7 @@ public class Choice extends BaseEntity {
     private Boolean correctAnswer;
 
     //The question this choice belongs to
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     private Question question;
 
     /**
