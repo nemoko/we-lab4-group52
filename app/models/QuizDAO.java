@@ -94,7 +94,7 @@ public class QuizDAO implements IQuizDAO {
      */
     @Override
     public <E extends BaseEntity> List<E> findEntities(Class<E> entityClazz) {
-        String q = "SELECT c FROM " + entityClazz.getSimpleName() + " c";
+        String q = "FROM " + entityClazz.getSimpleName();
 
         TypedQuery<E> query = em().createQuery(q,entityClazz);
 
