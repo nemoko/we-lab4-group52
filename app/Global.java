@@ -1,5 +1,6 @@
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
+import data.DBpedia;
 import data.JSONDataInserter;
 import play.Application;
 import play.GlobalSettings;
@@ -31,7 +32,8 @@ public class Global extends GlobalSettings {
 
 			@Override
 			public Boolean apply() throws Throwable {
-				insertJSonData();
+			    insertJSonData();
+                DBpedia.insertData();
 				return true;
 			}
 			   
