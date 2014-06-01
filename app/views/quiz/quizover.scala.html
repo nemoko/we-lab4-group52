@@ -1,4 +1,4 @@
-@(game: QuizGame)
+@(game: QuizGame, uuid: String)
 @player1 = @{ game.getPlayers().get(0) }
 @player2 = @{ game.getPlayers().get(1) }
 @winnerMessage = @{
@@ -32,6 +32,13 @@
                     <input id="next" type="submit" value="@Messages("quiz.start")"/>
                 }
             </section>
+
+            @if(!uuid.equals(null)){
+                <script type="text/javascript">
+                    var msg = "UUID @uuid wurde auf Twitter veröffentlicht";
+                    alert(msg);
+                </script>
+            }
             <script type="text/javascript">
             //<![CDATA[
 	            $(document).ready(function(){

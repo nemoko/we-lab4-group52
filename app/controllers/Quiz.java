@@ -1,5 +1,6 @@
 package controllers;
 
+import highscore.PublishHighScoreServiceClient;
 import models.*;
 import play.Logger;
 import play.Play;
@@ -13,15 +14,14 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import scala.Option;
+import twitter.PublishHighScoreTwitterClient;
+import twitter.TwitterStatusMessage;
 import views.html.quiz.index;
 import views.html.quiz.quiz;
 import views.html.quiz.quizover;
 import views.html.quiz.roundover;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Security.Authenticated(Secured.class)
 public class Quiz extends Controller {
@@ -128,11 +128,68 @@ public class Quiz extends Controller {
 		if (isRoundOver(game)) {
 			return redirect(routes.Quiz.roundResult());
 		} else if (isGameOver(game)) {
-			return redirect(routes.Quiz.endResult());
+            return redirect(routes.Quiz.endResult());
 		} else {
 			return redirect(routes.Quiz.question());
 		}
 	}
+
+    private static String publishHighScore(QuizGame g){
+        //--- Highscore service call ---
+        QuizUser winner = g.getWinner();
+        QuizUser user1 = g.getPlayers().get(0);
+        QuizUser user2 = g.getPlayers().get(1);
+        String firstName1 = "epicWin3017";
+        String firstName2 = "that";
+        String lastName1 = "mustNoBeEmpty(doh)";
+        String lastName2 = "bot";
+        String birthdate1 = "1000-10-10";
+        String birthdate2 = "1000-10-10";
+        String gender1 = "male";
+        String gender2 = "male";
+        String status1;
+        String status2;
+
+        if(user1.getFirstName()!=null)
+            firstName1= user1.getFirstName();
+        if(user2.getFirstName()!=null)
+            firstName2= user2.getFirstName();
+        if(user1.getLastName()!=null)
+            lastName1= user1.getLastName();
+        if(user1.getBirthDate()!=null)
+            birthdate1 = user1.getBirthDate().toString();
+        if(user1.getGender()!=null)
+            gender1 = user1.getGender().toString();
+        if(user2.getLastName()!=null)
+            lastName2= user2.getLastName();
+        if(user2.getBirthDate()!=null)
+            birthdate2 = user2.getBirthDate().toString();
+        if(user2.getGender()!=null)
+            gender2 = user2.getGender().toString();
+
+        if(!winner.equals(null)){
+            if(winner.getName().equals("Spieler 2")){
+                status1 = "loser";
+                status2 = "winner";
+            } else {
+                status2 = "loser";
+                status1 = "winner";
+            }
+            PublishHighScoreServiceClient client = new PublishHighScoreServiceClient(firstName1,lastName1,birthdate1,gender1,status1,firstName2,lastName2,birthdate2,gender2,status2);
+            String uuid = client.fire();
+            PublishHighScoreTwitterClient twitterClient = new PublishHighScoreTwitterClient();
+            TwitterStatusMessage message = new TwitterStatusMessage("myPC",uuid,new Date());
+
+            try {
+                twitterClient.publishUuid(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return uuid;
+        }
+        return null;
+    }
 
 	private static boolean isGameOver(QuizGame game) {
 		return game.isRoundOver() && game.isGameOver();
@@ -160,7 +217,8 @@ public class Quiz extends Controller {
 	public static Result endResult() {
 		QuizGame game = cachedGame();
 		if (game != null && isGameOver(game)) {
-			return ok(quizover.render(game));
+            String uuid = publishHighScore(game);
+			return ok(quizover.render(game, uuid));
 		} else {
 			return badRequest(Messages.get("quiz.no-end-result"));
 		}
