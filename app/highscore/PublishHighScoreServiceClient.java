@@ -115,9 +115,6 @@ public class PublishHighScoreServiceClient {
             // Close the connection
             connection.close();
 
-            if(uuid==null) {
-                uuid = UUID.randomUUID().toString();
-            }
             return uuid;
 
         } catch (Exception e) {

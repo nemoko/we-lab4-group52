@@ -139,10 +139,10 @@ public class Quiz extends Controller {
         QuizUser winner = g.getWinner();
         QuizUser user1 = g.getPlayers().get(0);
         QuizUser user2 = g.getPlayers().get(1);
-        String firstName1 = "epicWin3017";
-        String firstName2 = "that";
-        String lastName1 = "mustNoBeEmpty(doh)";
-        String lastName2 = "bot";
+        String firstName1 = "   ";
+        String firstName2 = "   ";
+        String lastName1 = "   ";
+        String lastName2 = "   ";
         String birthdate1 = "1000-10-10";
         String birthdate2 = "1000-10-10";
         String gender1 = "male";
@@ -150,21 +150,21 @@ public class Quiz extends Controller {
         String status1;
         String status2;
 
-        if(user1.getFirstName()!=null)
+        if(user1.getFirstName()!=null && !user1.getFirstName().equals(""))
             firstName1= user1.getFirstName();
-        if(user2.getFirstName()!=null)
+        if(user2.getFirstName()!=null && !user2.getFirstName().equals(""))
             firstName2= user2.getFirstName();
-        if(user1.getLastName()!=null)
+        if(user1.getLastName()!=null && !user1.getLastName().equals(""))
             lastName1= user1.getLastName();
         if(user1.getBirthDate()!=null)
-            birthdate1 = user1.getBirthDate().toString();
-        if(user1.getGender()!=null)
+            birthdate1 = user1.getBirthDate().toString().substring(0,9);
+        if(user1.getGender()!=null && !user1.getGender().toString().equals(""))
             gender1 = user1.getGender().toString();
-        if(user2.getLastName()!=null)
+        if(user2.getLastName()!=null && !user2.getLastName().equals(""))
             lastName2= user2.getLastName();
         if(user2.getBirthDate()!=null)
-            birthdate2 = user2.getBirthDate().toString();
-        if(user2.getGender()!=null)
+            birthdate2 = user2.getBirthDate().toString().substring(0,9);
+        if(user2.getGender()!=null && !user2.getGender().toString().equals(""))
             gender2 = user2.getGender().toString();
 
         if(!winner.equals(null)){
@@ -177,6 +177,8 @@ public class Quiz extends Controller {
             }
             PublishHighScoreServiceClient client = new PublishHighScoreServiceClient(firstName1,lastName1,birthdate1,gender1,status1,firstName2,lastName2,birthdate2,gender2,status2);
             String uuid = client.fire();
+            if(uuid == null)
+                return null;
             PublishHighScoreTwitterClient twitterClient = new PublishHighScoreTwitterClient();
             TwitterStatusMessage message = new TwitterStatusMessage(user1.getUserName(),uuid,new Date());
 

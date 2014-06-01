@@ -20,6 +20,11 @@ public class PublishHighScoreTwitterClient implements ITwitterClient{
     static String accessTokenStr = "1366513208-MutXEbBMAVOwrbFmZtj1r4Ih2vcoHGHE2207002";
     static String accessTokenSecretStr = "RMPWOePlus3xtURWRVnv1TgrjTyK7Zk33evp4KKyA";
 
+    public PublishHighScoreTwitterClient() {
+        super();
+    }
+
+    /*
     public static void main (String args[]) {
         PublishHighScoreTwitterClient client = new PublishHighScoreTwitterClient();
         TwitterStatusMessage message = new TwitterStatusMessage("me","777",new Date());
@@ -29,6 +34,7 @@ public class PublishHighScoreTwitterClient implements ITwitterClient{
             e.printStackTrace();
         }
     }
+    */
 
     @Override
     public void publishUuid(TwitterStatusMessage message) throws Exception {
