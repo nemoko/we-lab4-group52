@@ -9,9 +9,12 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import models.Category;
+import models.Choice;
 import models.Question;
 import play.Logger;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +40,10 @@ public class DBpedia {
         String englishActorName = DBPediaService.getResourceName(actor, Locale.ENGLISH);
         String germanActorName = DBPediaService.getResourceName(actor, Locale.GERMAN);
 
+        question.setTextDE("In welchen Filmen hat " + germanActorName + " gespielt und " + germanDirectorName + " Regie geführt");
+        question.setTextEN("In which movies acted " + englishActorName + " and " + englishDirectorName + " directed");
+        question.setMaxTime(new BigDecimal(45));
+
         // build SPARQL-query
         SelectQueryBuilder movieQuery = DBPediaService.createQueryBuilder()
                 .setLimit(5) // at most five statements
@@ -50,22 +57,19 @@ public class DBpedia {
         Model timBurtonMovies = DBPediaService.loadStatements(movieQuery.toQueryString());
 
         // get english and german movie names, e.g., for right choices
-        List<String> englishTimBurtonMovieNames =
-                DBPediaService.getResourceNames(timBurtonMovies, Locale.ENGLISH);
-        List<String> germanTimBurtonMovieNames =
-                DBPediaService.getResourceNames(timBurtonMovies, Locale.GERMAN);
+        List<String> englishTimBurtonMovieNames = DBPediaService.getResourceNames(timBurtonMovies, Locale.ENGLISH);
+        List<String> germanTimBurtonMovieNames = DBPediaService.getResourceNames(timBurtonMovies, Locale.GERMAN);
 
-        // alter query to get movies without tim burton
-        movieQuery.removeWhereClause(DBPediaOWL.director,director);
-        movieQuery.addMinusClause(DBPediaOWL.director,director);
+        for(String movie : englishTimBurtonMovieNames) {
+            Choice correctChoice = new Choice();
+            correctChoice.setTextEN(movie);
+            question.addRightChoice(correctChoice);
+        }
 
-        // retrieve data from dbpedia
-        Model noTimBurtonMovies = DBPediaService.loadStatements(movieQuery.toQueryString());
-
-        // get english and german movie names, e.g., for wrong choices
-        List<String> englishNoTimBurtonMovieNames =
-                DBPediaService.getResourceNames(noTimBurtonMovies, Locale.ENGLISH);
-        List<String> germanNoTimBurtonMovieNames =
-                DBPediaService.getResourceNames(noTimBurtonMovies, Locale.GERMAN);
+        for(String movie : germanTimBurtonMovieNames) {
+            Choice correctChoice = new Choice();
+            correctChoice.setTextDE(movie);
+            question.addRightChoice(correctChoice);
+        }
     }
 }
